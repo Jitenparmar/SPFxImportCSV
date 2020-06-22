@@ -2,11 +2,10 @@ import * as React from 'react';
 import * as ReactDom from 'react-dom';
 import { Version } from '@microsoft/sp-core-library';
 import {
+  BaseClientSideWebPart,
   IPropertyPaneConfiguration,
   PropertyPaneTextField
-} from '@microsoft/sp-property-pane';
-import { BaseClientSideWebPart } from '@microsoft/sp-webpart-base';
-
+} from '@microsoft/sp-webpart-base';
 import * as strings from 'ImportCsvWebPartStrings';
 import ImportCsv from './components/ImportCsv';
 import { IImportCsvProps } from './components/IImportCsvProps';
@@ -21,7 +20,10 @@ export default class ImportCsvWebPart extends BaseClientSideWebPart <IImportCsvW
     const element: React.ReactElement<IImportCsvProps> = React.createElement(
       ImportCsv,
       {
-        description: this.properties.description
+        description: this.properties.description,
+        context: this.context,
+        spHttpClient: this.context.spHttpClient,  
+        siteUrl: this.context.pageContext.web.absoluteUrl
       }
     );
 
