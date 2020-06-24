@@ -9,13 +9,13 @@ import {
 import * as strings from 'ImportCsvWebPartStrings';
 import ImportCsv from './components/ImportCsv';
 import { IImportCsvProps } from './components/IImportCsvProps';
-
+import { SPService } from "../../Services/SPService";
 export interface IImportCsvWebPartProps {
   description: string;
 }
 
 export default class ImportCsvWebPart extends BaseClientSideWebPart <IImportCsvWebPartProps> {
-
+  private SpServiceInstance:SPService;
   public render(): void {
     const element: React.ReactElement<IImportCsvProps> = React.createElement(
       ImportCsv,
@@ -23,11 +23,17 @@ export default class ImportCsvWebPart extends BaseClientSideWebPart <IImportCsvW
         description: this.properties.description,
         context: this.context,
         spHttpClient: this.context.spHttpClient,  
-        siteUrl: this.context.pageContext.web.absoluteUrl
+        siteUrl: this.context.pageContext.web.absoluteUrl,
+        SPServiceInstance:this.SpServiceInstance,
       }
     );
 
     ReactDom.render(element, this.domElement);
+  }
+
+  public async onInit(){
+    await super.onInit();
+    this.SpServiceInstance = new SPService();
   }
 
   protected onDispose(): void {
