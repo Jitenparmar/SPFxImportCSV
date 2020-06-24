@@ -28,7 +28,7 @@ export default class ImportCsv extends React.Component<IImportCsvProps, IImportC
       header: true,
       step: (results, parser) => {
         if (results.data["Sample ID"] == this.state.SampleID) {
-          console.log("Row data:", results.data)
+          console.log("Row data:", results.data);
           this.setState({ ExcelFileData: results.data });
         }
       }
