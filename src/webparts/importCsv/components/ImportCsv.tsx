@@ -33,9 +33,11 @@ export default class ImportCsv extends React.Component<IImportCsvProps, IImportC
         if (results.data["Sample ID"] == this.state.SampleID) {
           //#region Filter data and Print in Console
           console.log("Row data:", results.data);
+         
+          //#endregion
+          
           ExcelData.push(results.data);
           this.setState({ ExcelFileData: ExcelData});
-          //#endregion
             
           //#region Export to CSV
           const fileType = 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet;charset=UTF-8';
