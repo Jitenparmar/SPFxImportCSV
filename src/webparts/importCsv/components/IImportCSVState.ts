@@ -1,5 +1,5 @@
 export interface IImportCSVState{
-    ExcelFileData:any;
+    ExcelFileData:any[];
     Loading:boolean;
     SampleID:string;
 }

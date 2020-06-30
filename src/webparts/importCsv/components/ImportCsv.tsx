@@ -1,13 +1,16 @@
 import * as React from 'react';
 import styles from './ImportCsv.module.scss';
 import { IImportCsvProps } from './IImportCsvProps';
-import { readRemoteFile } from 'react-papaparse';
+import { readRemoteFile, jsonToCSV } from 'react-papaparse';
 import { IImportCSVState } from './IImportCSVState';
 import { TextField } from "office-ui-fabric-react/lib/TextField";
 import { PrimaryButton } from 'office-ui-fabric-react';
+import * as FileSaver from 'file-saver';
+import * as XLSX from 'xlsx';
 import { Stack, IStackProps, IStackStyles } from 'office-ui-fabric-react/lib/Stack';
 const stackTokens = { childrenGap: 50 };
 const stackStyles: Partial<IStackStyles> = { root: { width: 650 } };
+const ExcelData: any[] = [];
 const columnProps: Partial<IStackProps> = {
   tokens: { childrenGap: 15 },
   styles: { root: { width: 300 } },
@@ -28,8 +31,22 @@ export default class ImportCsv extends React.Component<IImportCsvProps, IImportC
       header: true,
       step: (results, parser) => {
         if (results.data["Sample ID"] == this.state.SampleID) {
+          //#region Filter data and Print in Console
           console.log("Row data:", results.data);
-          this.setState({ ExcelFileData: results.data });
+          ExcelData.push(results.data);
+          this.setState({ ExcelFileData: ExcelData});
+          //#endregion
+            
+          //#region Export to CSV
+          const fileType = 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet;charset=UTF-8';
+          const fileExtension = '.xlsx';
+          const ws = XLSX.utils.json_to_sheet(this.state.ExcelFileData);
+          const wb = { Sheets: { 'data': ws }, SheetNames: ['data'] };
+          const excelBuffer = XLSX.write(wb, { bookType: 'xlsx', type: 'array' });
+          const data = new Blob([excelBuffer], { type: fileType });
+          FileSaver.saveAs(data, "ABC" + fileExtension);
+          //#endregion
+
         }
       }
     });
